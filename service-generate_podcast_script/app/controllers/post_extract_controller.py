@@ -1,10 +1,14 @@
-from openai import OpenAI
-import json
+import openai
+import os
 from app.helpers.error import INTERNAL_SERVER_ERROR
 
-client = OpenAI(
-    api_key = userdata.get('openai_api_key')
-)
+openai_api_key = os.getenv("OPENAI_API_KEY")
+
+if openai_api_key is None:
+    raise ValueError("API key not found. Make sure the OPENAI_API_KEY environment variable is set.")
+
+# Configurar a chave API
+openai.api_key = openai_api_key
 
 class TextGenerationController:
     def __init__(self, api_key):
@@ -19,7 +23,7 @@ class TextGenerationController:
 
 
     def interact_with_AI (self, prompt, max_tokens=150):
-        response = client.chat.completions.create(
+        response = openai_api_key.chat.completions.create(
             max_tokens=max_tokens,
             model="gpt-4o-mini",
             temperature=0,
